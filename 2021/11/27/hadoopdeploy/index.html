@@ -214,7 +214,8 @@
 <h1 id="Hadoop安装"><a href="#Hadoop安装" class="headerlink" title="Hadoop安装"></a>Hadoop安装</h1><p>首先在 <a class="link"   target="_blank" rel="noopener" href="https://hadoop.apache.org/releases.html" >Hadoop官网下载<i class="fas fa-external-link-alt"></i></a> 合适的版本，我这里选择的是3.2.2版本。推荐下载官方编译好的二进制安装包，源码会在后面CDH学习中使用到。</p>
 <p>Hadoop是需要Java环境的，所以要确保机器已经安装好JDK（官方文档给出的最低要求是Java8），并且配置到全局环境变量中（大部分的大数据工具都需要Java环境，如果不配置全局环境变量就需要在每一个用户下对Java环境进行配置）。在生产环境安装部署时要先到 <a class="link"   target="_blank" rel="noopener" href="https://cwiki.apache.org/confluence/display/HADOOP/Hadoop+Java+Versions" >官网<i class="fas fa-external-link-alt"></i></a> 确认JDK版本在不在问题列表中。</p>
 <blockquote>
-<h4 id="Minimum-required-Java-version-increased-from-Java-7-to-Java-8"><a href="#Minimum-required-Java-version-increased-from-Java-7-to-Java-8" class="headerlink" title="Minimum required Java version increased from Java 7 to Java 8"></a>Minimum required Java version increased from Java 7 to Java 8</h4><p>All Hadoop JARs are now compiled targeting a runtime version of Java 8. Users still using Java 7 or below must upgrade to Java 8.</p>
+<p>Minimum required Java version increased from Java 7 to Java 8</p>
+<p>All Hadoop JARs are now compiled targeting a runtime version of Java 8. Users still using Java 7 or below must upgrade to Java 8.</p>
 </blockquote>
 <h2 id="1-建立用户及文件夹"><a href="#1-建立用户及文件夹" class="headerlink" title="1. 建立用户及文件夹"></a>1. 建立用户及文件夹</h2><p>首先在服务器上建立一个用户来管理及使用Hadoop。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@Clay ~]$ useradd clay</span><br><span class="line">[root@Clay ~]$ id clay</span><br><span class="line">uid=1000(clay) gid=1000(clay) groups=1000(clay)</span><br></pre></td></tr></table></figure>
@@ -348,143 +349,68 @@
     
 
         
-            .valine-container {
+            
+    <div class="valine-container">
+        <script 
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script >
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'DwhETuCicGIBRdKi5BXTll0o-gzGzoHsz',
+                    appKey: 'R6lYu4fxN1Dad5S2nGWcbbvs',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '😄有什么想说的？留言给我吧...',
+                    lang: 'zh-CN'.toLowerCase()
+                });
 
-  #vcomments {
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
 
-    .vwrap {
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = 'Clay';
 
-      border: 1px solid var(--third-text-color);
-
-      .vheader {
-
-        .vinput {
-
-          color: var(--default-text-color);
-          border-color: var(--third-text-color);
-
-          &:focus {
-            border-bottom: 1px dashed var(--primary-color) !important;
-          }
-        }
-      }
-
-
-      .vedit {
-
-        .veditor {
-          color: var(--default-text-color);
-        }
-
-        .vctrl {
-
-          .vicon {
-
-            fill: var(--default-text-color);
-
-            &.actived {
-              fill: var(--primary-color);
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
             }
-          }
-        }
 
-      }
+            if ('false') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
 
-
-      button.vsubmit {
-
-        background: transparent !important;
-        color: var(--default-text-color) !important;
-        border: 1px solid var(--default-text-color) !important;
-
-        &:hover {
-          color: var(--primary-color) !important;
-          border: 1px solid var(--primary-color) !important;
-        }
-      }
-
-
-    }
-
-
-    .vcount {
-      color: var(--default-text-color);
-
-      .vnum {
-        color: var(--second-text-color);
-      }
-    }
-
-
-    .vcard {
-
-      .vnick {
-        .author {
-          font-weight: 450;
-          font-size: 12px;
-          padding: 2px;
-          background: -webkit-linear-gradient(45deg, #e3565e, #ee854b, #f6c258, #90c68a, #5fb3b3, #6699cc, #c594c5);
-          background: linear-gradient(45deg, #e3565e, #ee854b, #f6c258, #90c68a, #5fb3b3, #6699cc, #c594c5);
-          color: #fff;
-          margin-left: 2px;
-          border-radius: 2px;
-        }
-      }
-
-
-      .vhead {
-
-        .vnick {
-          color: var(--primary-color);
-        }
-
-        .vsys {
-          color: var(--default-text-color);
-          background: var(--fourth-text-color) !important;
-        }
-      }
-
-
-      .vcontent {
-        P {
-          color: var(--default-text-color);
-
-          code {
-            color: var(--code-foreground);
-            background: var(--code-background);
-          }
-        }
-      }
-
-
-      .vh {
-        border-bottom-color: var(--border-color);
-      }
-
-      .vquote {
-        border-left-color: var(--border-color);
-      }
-    }
-
-
-    .vcopy {
-      color: var(--third-text-color);
-    }
-
-
-    .vpage {
-
-      .vmore {
-        border: 1px solid var(--border-color);
-        color: var(--second-text-color);
-      }
-    }
-
-
-  }
-
-
-}
 
 
         
@@ -610,7 +536,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EHadoop"><span class="nav-number">1.</span> <span class="nav-text">关于Hadoop</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hadoop%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">Hadoop安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Minimum-required-Java-version-increased-from-Java-7-to-Java-8"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">Minimum required Java version increased from Java 7 to Java 8</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BB%BA%E7%AB%8B%E7%94%A8%E6%88%B7%E5%8F%8A%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">2.1.</span> <span class="nav-text">1. 建立用户及文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Hadoop%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">2.Hadoop解压安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Standalone%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">3.Standalone模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Pseudo-Distributed%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.4.</span> <span class="nav-text">4.Pseudo-Distributed模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%A6%96%E5%85%88%E8%A6%81%E4%BF%AE%E6%94%B9%E7%9A%84%E6%98%AFcore-site-xml%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.4.1.</span> <span class="nav-text">1. 首先要修改的是core-site.xml文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8E%A5%E4%B8%8B%E6%9D%A5%E4%BF%AE%E6%94%B9hdfs-site-xml%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.4.2.</span> <span class="nav-text">2. 接下来修改hdfs-site.xml文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%A0%E4%B8%BA%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E6%A8%A1%E5%BC%8F%E6%98%AF%E9%9C%80%E8%A6%81%E8%BF%90%E8%A1%8C%E8%BF%9B%E7%A8%8B%EF%BC%8C%E6%89%80%E4%BB%A5%E9%9C%80%E8%A6%81%E9%85%8D%E7%BD%AESSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E3%80%82"><span class="nav-number">2.4.3.</span> <span class="nav-text">3. 因为伪分布式模式是需要运行进程，所以需要配置SSH免密登录。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E5%AE%8C%E6%88%90%EF%BC%8C%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%A0%BC%E5%BC%8F%E5%8C%96%EF%BC%9A"><span class="nav-number">2.4.4.</span> <span class="nav-text">4. 前期准备工作完成，接下来格式化：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%90%AF%E5%8A%A8NameNode%E5%92%8CDataNode%EF%BC%9A"><span class="nav-number">2.4.5.</span> <span class="nav-text">5. 启动NameNode和DataNode：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8jps%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E6%98%AF%E5%90%A6%E5%90%AF%E5%8A%A8%EF%BC%8C%E4%BD%86%E6%98%AF%E6%9C%80%E4%BF%9D%E9%99%A9%E7%9A%84%E6%98%AF%E4%BD%BF%E7%94%A8ps-ef-grep-hadoop%E6%9D%A5%E6%9F%A5%E7%9C%8B%EF%BC%9A"><span class="nav-number">2.4.6.</span> <span class="nav-text">6. 可以使用jps命令查看服务是否启动，但是最保险的是使用ps -ef | grep hadoop来查看：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-HDFS%E7%9A%84web%E7%95%8C%E9%9D%A2%E8%AE%BF%E9%97%AE"><span class="nav-number">2.4.7.</span> <span class="nav-text">7.HDFS的web界面访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E8%BF%90%E8%A1%8C%E5%AE%98%E6%96%B9%E6%B5%8B%E8%AF%95%E6%A1%88%E4%BE%8B"><span class="nav-number">2.4.8.</span> <span class="nav-text">8. 运行官方测试案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E5%AD%98%E5%82%A8%E5%8F%82%E6%95%B0"><span class="nav-number">2.5.</span> <span class="nav-text">修改默认存储参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E6%A8%A1%E5%BC%8F%E4%B8%8Byarn%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="nav-number">2.6.</span> <span class="nav-text">伪分布式模式下yarn的部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WordCount%E6%A1%88%E4%BE%8B"><span class="nav-number">2.7.</span> <span class="nav-text">WordCount案例</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EHadoop"><span class="nav-number">1.</span> <span class="nav-text">关于Hadoop</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hadoop%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">Hadoop安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BB%BA%E7%AB%8B%E7%94%A8%E6%88%B7%E5%8F%8A%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">2.1.</span> <span class="nav-text">1. 建立用户及文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Hadoop%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">2.Hadoop解压安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Standalone%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">3.Standalone模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Pseudo-Distributed%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.4.</span> <span class="nav-text">4.Pseudo-Distributed模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%A6%96%E5%85%88%E8%A6%81%E4%BF%AE%E6%94%B9%E7%9A%84%E6%98%AFcore-site-xml%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.4.1.</span> <span class="nav-text">1. 首先要修改的是core-site.xml文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8E%A5%E4%B8%8B%E6%9D%A5%E4%BF%AE%E6%94%B9hdfs-site-xml%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.4.2.</span> <span class="nav-text">2. 接下来修改hdfs-site.xml文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%A0%E4%B8%BA%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E6%A8%A1%E5%BC%8F%E6%98%AF%E9%9C%80%E8%A6%81%E8%BF%90%E8%A1%8C%E8%BF%9B%E7%A8%8B%EF%BC%8C%E6%89%80%E4%BB%A5%E9%9C%80%E8%A6%81%E9%85%8D%E7%BD%AESSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E3%80%82"><span class="nav-number">2.4.3.</span> <span class="nav-text">3. 因为伪分布式模式是需要运行进程，所以需要配置SSH免密登录。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E5%AE%8C%E6%88%90%EF%BC%8C%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%A0%BC%E5%BC%8F%E5%8C%96%EF%BC%9A"><span class="nav-number">2.4.4.</span> <span class="nav-text">4. 前期准备工作完成，接下来格式化：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%90%AF%E5%8A%A8NameNode%E5%92%8CDataNode%EF%BC%9A"><span class="nav-number">2.4.5.</span> <span class="nav-text">5. 启动NameNode和DataNode：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8jps%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E6%98%AF%E5%90%A6%E5%90%AF%E5%8A%A8%EF%BC%8C%E4%BD%86%E6%98%AF%E6%9C%80%E4%BF%9D%E9%99%A9%E7%9A%84%E6%98%AF%E4%BD%BF%E7%94%A8ps-ef-grep-hadoop%E6%9D%A5%E6%9F%A5%E7%9C%8B%EF%BC%9A"><span class="nav-number">2.4.6.</span> <span class="nav-text">6. 可以使用jps命令查看服务是否启动，但是最保险的是使用ps -ef | grep hadoop来查看：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-HDFS%E7%9A%84web%E7%95%8C%E9%9D%A2%E8%AE%BF%E9%97%AE"><span class="nav-number">2.4.7.</span> <span class="nav-text">7.HDFS的web界面访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E8%BF%90%E8%A1%8C%E5%AE%98%E6%96%B9%E6%B5%8B%E8%AF%95%E6%A1%88%E4%BE%8B"><span class="nav-number">2.4.8.</span> <span class="nav-text">8. 运行官方测试案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E5%AD%98%E5%82%A8%E5%8F%82%E6%95%B0"><span class="nav-number">2.5.</span> <span class="nav-text">修改默认存储参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E6%A8%A1%E5%BC%8F%E4%B8%8Byarn%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="nav-number">2.6.</span> <span class="nav-text">伪分布式模式下yarn的部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WordCount%E6%A1%88%E4%BE%8B"><span class="nav-number">2.7.</span> <span class="nav-text">WordCount案例</span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>
