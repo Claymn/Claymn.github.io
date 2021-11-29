@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="大数据">
+    <meta name="author" content="Clay">
+    
+    <title>
+        
+            Hadoop安装与伪分布式部署 |
+        
+        Clay
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/clogo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/taurus.png","favicon":"/images/clogo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Stay hungry, Stay foolish"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                Clay
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Hadoop安装与伪分布式部署</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/taurus.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Clay</span>
+                        
+                            <span class="author-label">Lv1</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-11-27 19:10:30
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Hadoop/">Hadoop</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Hadoop/">Hadoop</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>3.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>15 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="关于Hadoop"><a href="#关于Hadoop" class="headerlink" title="关于Hadoop"></a>关于Hadoop</h1><p>广义上的Hadoop是指以<a class="link"   target="_blank" rel="noopener" href="http://hadoop.apache.org/" >Hadoop<i class="fas fa-external-link-alt"></i></a> 软件为主的软件生态圈；狭义上的Hadoop则是指Hadoop软件本身。</p>
+<p>Hadoop是由Apache基金会开发的一个分布式系统基础架构，也是Apache基金会的顶级项目之一。Hadoop可以充分利用集群的威力来进行高速运算和存储。Hadoop有三个核心组件：</p>
+<blockquote>
+<p>HDFS：分布式文件系统，主要的作用是用来存储数据。具有高容错、低成本、高吞吐量的特点。</p>
+<p>MapReduce：主要负责数据运算。</p>
+<p>YARN：主要负责集群资源和作业的调度。</p>
+</blockquote>
+<h1 id="Hadoop安装"><a href="#Hadoop安装" class="headerlink" title="Hadoop安装"></a>Hadoop安装</h1><p>首先在 <a class="link"   target="_blank" rel="noopener" href="https://hadoop.apache.org/releases.html" >Hadoop官网下载<i class="fas fa-external-link-alt"></i></a> 合适的版本，我这里选择的是3.2.2版本。推荐下载官方编译好的二进制安装包，源码会在后面CDH学习中使用到。</p>
+<p>Hadoop是需要Java环境的，所以要确保机器已经安装好JDK（官方文档给出的最低要求是Java8），并且配置到全局环境变量中（大部分的大数据工具都需要Java环境，如果不配置全局环境变量就需要在每一个用户下对Java环境进行配置）。在生产环境安装部署时要先到 <a class="link"   target="_blank" rel="noopener" href="https://cwiki.apache.org/confluence/display/HADOOP/Hadoop+Java+Versions" >官网<i class="fas fa-external-link-alt"></i></a> 确认JDK版本在不在问题列表中。</p>
+<blockquote>
+<h4 id="Minimum-required-Java-version-increased-from-Java-7-to-Java-8"><a href="#Minimum-required-Java-version-increased-from-Java-7-to-Java-8" class="headerlink" title="Minimum required Java version increased from Java 7 to Java 8"></a>Minimum required Java version increased from Java 7 to Java 8</h4><p>All Hadoop JARs are now compiled targeting a runtime version of Java 8. Users still using Java 7 or below must upgrade to Java 8.</p>
+</blockquote>
+<h2 id="1-建立用户及文件夹"><a href="#1-建立用户及文件夹" class="headerlink" title="1. 建立用户及文件夹"></a>1. 建立用户及文件夹</h2><p>首先在服务器上建立一个用户来管理及使用Hadoop。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@Clay ~]$ useradd clay</span><br><span class="line">[root@Clay ~]$ id clay</span><br><span class="line">uid=1000(clay) gid=1000(clay) groups=1000(clay)</span><br></pre></td></tr></table></figure>
+
+<p>然后要切换到新建好的<code>clay</code>用户，并且在<code>clay</code>用户的<code>home</code>目录下创建所需要的文件夹。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@Clay ~]$ su - clay</span><br><span class="line">[ruoze@Clay ~]$ mkdir sourcecode software app log data lib tmp</span><br><span class="line">[ruoze@Clay ~]$ ll</span><br><span class="line">total 28</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 22 21:20 app</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 data</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 lib</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:11 software</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 sourcecode</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 tmp</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tips</strong>:这里需要自建一个<code>tmp</code>目录。根据Linux系统的不同，默认的<code>tmp</code>目录定期不访问会自动清除。</p>
+</blockquote>
+<h2 id="2-Hadoop解压安装"><a href="#2-Hadoop解压安装" class="headerlink" title="2.Hadoop解压安装"></a>2.Hadoop解压安装</h2><p>做好前期的准备工作后，通过<code>scp</code>或<code>rz</code>将Hadoop压缩包传输到Linux服务器上。<br>首先把压缩包移动到新建用户<code>clay</code>的<code>home</code>下，并修正权限确保不会出现<code>Permission Denied</code>的错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@Clay ~]$ mv /tmp/hadoop-3.2.2.tar.gz /home/clay/software/</span><br><span class="line">[root@Clay ~]$ chown clay:clay /home/ruoze/software/* </span><br></pre></td></tr></table></figure>
+<p>然后解压并创建软连接：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay software]$ tar -xzvf hadoop-3.2.2.tar.gz -C ../app/ </span><br><span class="line">[clay@Clay software]$ cd ../app</span><br><span class="line">[clay@Clay app]$ ln -s hadoop-3.2.2 hadoop</span><br><span class="line">[clay@Clay app]$ ll</span><br><span class="line">total 4</span><br><span class="line">lrwxrwxrwx  1 clay clay   13 Nov 22 21:20 hadoop -&gt; hadoop-3.2.2/</span><br><span class="line">drwxr-xr-x 12 clay clay 4096 Nov 25 20:59 hadoop-3.2.2</span><br><span class="line">[clay@Clay app] $ cd hadoop</span><br><span class="line">[clay@Clay hadoop]$ ll</span><br><span class="line">total 216</span><br><span class="line">drwxr-xr-x 2 clay clay   4096 Jan  3  2021 bin # 存放命令执行脚本</span><br><span class="line">drwxr-xr-x 3 clay clay   4096 Jan  3  2021 etc # 存放Hadoop配置文件</span><br><span class="line">drwxr-xr-x 2 clay clay   4096 Jan  3  2021 include</span><br><span class="line">drwxrwxr-x 2 clay clay   4096 Nov 24 21:48 input</span><br><span class="line">drwxr-xr-x 3 clay clay   4096 Jan  3  2021 lib</span><br><span class="line">drwxr-xr-x 4 clay clay   4096 Jan  3  2021 libexec</span><br><span class="line">-rw-rw-r-- 1 clay clay 150569 Dec  5  2020 LICENSE.txt</span><br><span class="line">drwxrwxr-x 2 clay clay   4096 Nov 26 22:32 logs</span><br><span class="line">-rw-rw-r-- 1 clay clay  21943 Dec  5  2020 NOTICE.txt</span><br><span class="line">drwxr-xr-x 3 clay clay   4096 Nov 25 21:09 output</span><br><span class="line">-rw-rw-r-- 1 clay clay   1361 Dec  5  2020 README.txt</span><br><span class="line">drwxr-xr-x 3 clay clay   4096 Nov 26 21:16 sbin # 存放Hadoop启动停止脚本</span><br><span class="line">drwxr-xr-x 4 clay clay   4096 Jan  3  2021 share</span><br></pre></td></tr></table></figure>
+
+<p>将Hadoop配置到当前用户的环境变量<code>.bahsrc</code>中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_HOME=/home/clay/app/hadoop</span><br><span class="line">export PATH=$HADOOP_HOME/bin:$PATH</span><br><span class="line">[clay@Clay ~]$ source . .bashrc # 生效配置文件</span><br><span class="line">[clay@Clay ~]$ echo $HADOOP_HOME/ # 使用echo命令校验配置是否正确</span><br><span class="line">/home/clay/app/hadoop/</span><br><span class="line">[clay@Clay ~]$ which hadoop # 使用which校验配置是否正确</span><br><span class="line">~/app/hadoop/bin/hadoop</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Standalone模式"><a href="#3-Standalone模式" class="headerlink" title="3.Standalone模式"></a>3.Standalone模式</h2><p>Hadoop官方文档提到了Hadoop有三种部署模式：</p>
+<blockquote>
+<p>Standalone Mode：本地模式，不启动进程。基本不使用</p>
+<p>Pseudo-Distributed Mode：伪分布式模式，会启动相关进程，但只有一个进程。学习使用</p>
+<p>Fully-Distributed Mode：分布式模式。启动多个进程。生产使用</p>
+</blockquote>
+<p>根据 <a class="link"   target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r3.2.2/hadoop-project-dist/hadoop-common/SingleCluster.html" >官方文档<i class="fas fa-external-link-alt"></i></a> 给出的Standalone Mode测试案例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ mkdir input</span><br><span class="line">[clay@Clay hadoop]$ ll</span><br><span class="line">[clay@Clay hadoop]$ cp etc/hadoop/*.xml input</span><br><span class="line">[clay@Clay hadoop]$ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.2.jar grep input output &#x27;dfs[a-z.]+&#x27;</span><br><span class="line">[clay@Clay hadoop]$ cat output/*</span><br><span class="line">[clay@Clay hadoop]$ cd output/</span><br><span class="line">[clay@Clay hadoop]$ ll</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 root root 11 Nov 21 10:14 part-r-00000</span><br><span class="line">-rw-r--r-- 1 root root  0 Nov 21 10:14 _SUCCESS</span><br><span class="line">[clay@Clay hadoop]$ cat part-r-00000</span><br><span class="line">1       dfsadmin </span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Pseudo-Distributed模式"><a href="#4-Pseudo-Distributed模式" class="headerlink" title="4.Pseudo-Distributed模式"></a>4.Pseudo-Distributed模式</h2><p>伪分布式模式是要启动相关进程的，所以需要对Hadoop的配置文件进行修改。</p>
+<h3 id="1-首先要修改的是core-site-xml文件："><a href="#1-首先要修改的是core-site-xml文件：" class="headerlink" title="1. 首先要修改的是core-site.xml文件："></a>1. 首先要修改的是<code>core-site.xml</code>文件：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ vi etc/hadoop/core-site.xml</span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">   &lt;property&gt;</span><br><span class="line">        &lt;name&gt;fs.defaultFS&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs://Clay:9000&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-接下来修改hdfs-site-xml文件："><a href="#2-接下来修改hdfs-site-xml文件：" class="headerlink" title="2. 接下来修改hdfs-site.xml文件："></a>2. 接下来修改<code>hdfs-site.xml</code>文件：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ vi etc/hadoop/hdfs-site.xml</span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.replication&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;1&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tips</strong>：注意修改配置文件时的用户。要使用之前新建的用户，而不是使用<code>root</code>用户。</p>
+</blockquote>
+<h3 id="3-因为伪分布式模式是需要运行进程，所以需要配置SSH免密登录。"><a href="#3-因为伪分布式模式是需要运行进程，所以需要配置SSH免密登录。" class="headerlink" title="3. 因为伪分布式模式是需要运行进程，所以需要配置SSH免密登录。"></a>3. 因为伪分布式模式是需要运行进程，所以需要配置SSH免密登录。</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$  ssh-keygen # 生成秘钥</span><br><span class="line">[clay@Clay ~]$  cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys # 将公钥添加到授权的钥匙串中</span><br><span class="line">[clay@Clay ~]$  chmod 600 ~/.ssh/authorized_keys # ***重点：要赋予600权限，否则不能实现免密登录</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-前期准备工作完成，接下来格式化："><a href="#4-前期准备工作完成，接下来格式化：" class="headerlink" title="4. 前期准备工作完成，接下来格式化："></a>4. 前期准备工作完成，接下来格式化：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ bin/hdfs namenode -format</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-启动NameNode和DataNode："><a href="#5-启动NameNode和DataNode：" class="headerlink" title="5. 启动NameNode和DataNode："></a>5. 启动NameNode和DataNode：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ sbin/start-dfs.sh </span><br><span class="line">Starting namenodes on [Clay]</span><br><span class="line">Starting datanodes</span><br><span class="line">Starting secondary namenodes [Clay]</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-可以使用jps命令查看服务是否启动，但是最保险的是使用ps-ef-grep-hadoop来查看："><a href="#6-可以使用jps命令查看服务是否启动，但是最保险的是使用ps-ef-grep-hadoop来查看：" class="headerlink" title="6. 可以使用jps命令查看服务是否启动，但是最保险的是使用ps -ef | grep hadoop来查看："></a>6. 可以使用<code>jps</code>命令查看服务是否启动，但是最保险的是使用<code>ps -ef | grep hadoop</code>来查看：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ jps</span><br><span class="line">20633 SecondaryNameNode</span><br><span class="line">20842 Jps</span><br><span class="line">20410 DataNode</span><br><span class="line">20285 NameNode</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ ps -ef | grep hadoop</span><br><span class="line">clay     20285     1  5 18:53 ?        00:00:07 /usr/java/java//bin/java -Dproc_namenode -Djava.net.preferIPv4Stack=true -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS -Dyarn.log.dir=/home/clay/app/hadoop/logs -Dyarn.log.file=hadoop-clay-namenode-Clay.log -Dyarn.home.dir=/home/clay/app/hadoop -Dyarn.root.logger=INFO,console -Djava.library.path=/home/clay/app/hadoop/lib/native -Dhadoop.log.dir=/home/clay/app/hadoop/logs -Dhadoop.log.file=hadoop-clay-namenode-Clay.log -Dhadoop.home.dir=/home/clay/app/hadoop -Dhadoop.id.str=clay -Dhadoop.root.logger=INFO,RFA -Dhadoop.policy.file=hadoop-policy.xml org.apache.hadoop.hdfs.server.namenode.NameNode</span><br><span class="line">clay     20410     1  5 18:53 ?        00:00:06 /usr/java/java//bin/java -Dproc_datanode -Djava.net.preferIPv4Stack=true -Dhadoop.security.logger=ERROR,RFAS -Dyarn.log.dir=/home/clay/app/hadoop/logs -Dyarn.log.file=hadoop-clay-datanode-Clay.log -Dyarn.home.dir=/home/clay/app/hadoop -Dyarn.root.logger=INFO,console -Djava.library.path=/home/clay/app/hadoop/lib/native -Dhadoop.log.dir=/home/clay/app/hadoop/logs -Dhadoop.log.file=hadoop-clay-datanode-Clay.log -Dhadoop.home.dir=/home/clay/app/hadoop -Dhadoop.id.str=clay -Dhadoop.root.logger=INFO,RFA -Dhadoop.policy.file=hadoop-policy.xml org.apache.hadoop.hdfs.server.datanode.DataNode</span><br><span class="line">clay     20633     1  4 18:53 ?        00:00:05 /usr/java/java//bin/java -Dproc_secondarynamenode -Djava.net.preferIPv4Stack=true -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS -Dyarn.log.dir=/home/clay/app/hadoop/logs -Dyarn.log.file=hadoop-clay-secondarynamenode-Clay.log -Dyarn.home.dir=/home/clay/app/hadoop -Dyarn.root.logger=INFO,console -Djava.library.path=/home/clay/app/hadoop/lib/native -Dhadoop.log.dir=/home/clay/app/hadoop/logs -Dhadoop.log.file=hadoop-clay-secondarynamenode-Clay.log -Dhadoop.home.dir=/home/clay/app/hadoop -Dhadoop.id.str=clay -Dhadoop.root.logger=INFO,RFA -Dhadoop.policy.file=hadoop-policy.xml org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode</span><br><span class="line">clay     20887 16629  0 18:55 pts/3    00:00:00 grep --color=auto hadoop</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-HDFS的web界面访问"><a href="#7-HDFS的web界面访问" class="headerlink" title="7.HDFS的web界面访问"></a>7.HDFS的web界面访问</h3><p>查看hdfs的web界面，在2.x版本中默认的端口是<code>50070</code>，在3.x版本中默认的端口是<code>9870</code>。因为远程服务器是阿里云，所以要到阿里云机器管理的安全组中将<code>9870</code>端口放开。然后就可以在浏览器中查看hdfs的web界面。</p>
+<h3 id="8-运行官方测试案例"><a href="#8-运行官方测试案例" class="headerlink" title="8. 运行官方测试案例"></a>8. 运行官方测试案例</h3><p>首先先创建一个hdfs目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ bin/hdfs dfs -mkdir /user</span><br><span class="line">[clay@Clay hadoop]$ bin/hdfs dfs -mkdir /user/clay</span><br><span class="line">[clay@Clay hadoop]$ hdfs dfs -ls /user</span><br><span class="line">Found 1 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-27 18:08 /user/clay</span><br><span class="line">[clay@Clay hadoop]$ bin/hdfs dfs -mkdir input # 在当前目录创建一个文件夹</span><br><span class="line">[clay@Clay hadoop]$ bin/hdfs dfs -put etc/hadoop/*.xml input # 将本地文件拷贝到hdfs上</span><br><span class="line">[clay@Clay hadoop]$ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.2.jar grep input output &#x27;dfs[a-z.]+&#x27; # 运行测试案例</span><br><span class="line">[clay@Clay hadoop]$ bin/hdfs dfs -get output output # 将存储在hdfs中的输出结果拷贝到本地</span><br><span class="line">[clay@Clay hadoop]$ cat output/*</span><br><span class="line">1       dfsadmin</span><br><span class="line">1       dfs.replication</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改默认存储参数"><a href="#修改默认存储参数" class="headerlink" title="修改默认存储参数"></a>修改默认存储参数</h2><p>Hadoop的一些运行数据等参数都是默认存储到根目录的<code>tmp</code>目录中的。由于Linux系统机制的问题，<code>tmp</code>目录会定期进行清理。如果Hadoop的运行数据被清理，想要重启服务就会很麻烦。所以一定要在Hadoop的配置文件中修改默认存储路径到之前自建的<code>tmp</code>目录中。</p>
+<p>修改<code>hdfs-site.xml</code>文件，使HDFS的三个进程都运行在<code>Clay</code>这台机器上.这样配置的目的是为了IP变换后不需要逐个修改配置文件，只需要在<code>/etc/hosts</code>文件中修改即可。在<code>hdfs-sit.xml</code>文件中添加下列参数：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>Clay:9868<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.https-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>Clay:9869<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>HDFS在启动时会生成一个<code>.pid</code>文件记录进程号，在停止服务时读取这个文件里的进程号来结束对应的进程。这个文件默认的存储位置同样是<code>/etc/tmp</code>目录下。如果<code>pid</code>文件被系统清除，那么此时在更新配置或jar包后，重启服务时DataNode并不会重启，还是之前的进程。所以需要将存储路径修改到自建的<code>tmp</code>目录中。在<code>hadoop-env.sh</code>文件中去掉注释并修改路径到自建<code>tmp</code>目录：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Where pid files are stored.  /tmp by default.</span></span><br><span class="line"><span class="built_in">export</span> HADOOP_PID_DIR=/home/clay/tmp</span><br></pre></td></tr></table></figure>
+
+<p>数据文件存储在默认<code>tmp</code>目录中同样是很危险的，所以需要修改存储路径。在<code>core-site.xml</code>文件中添加下面的配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/ruoze/tmp/hadoop-$&#123;user.name&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="伪分布式模式下yarn的部署"><a href="#伪分布式模式下yarn的部署" class="headerlink" title="伪分布式模式下yarn的部署"></a>伪分布式模式下yarn的部署</h2><p><code>yarn</code>组件启动后会有两个进程出现：<code>ResourceManager</code>和<code>NodeManager</code>。启动<code>yarn</code>之前需要先对<code>mapred-site.xml</code>进行配置，添加下列配置参数：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.application.classpath<span class="tag">&lt;/<span class="name">name</span>&gt;</span>	                        <span class="tag">&lt;<span class="name">value</span>&gt;</span>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*:$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>还要对<code>yarn-site.xml</code>进行配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.env-whitelist<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>配置完成后使用<code>sbin/yarn-start.sh</code>启动<code>yran</code>组件。<code>yarn</code>的web界面默认是在<code>8088</code>端口，同样需要到安全组进行配置，开放该端口。</p>
+<blockquote>
+<p><strong>Tips</strong>：使用默认的8088端口会有被挖矿的风险。防患于未然，需要更改端口号。</p>
+</blockquote>
+<h2 id="WordCount案例"><a href="#WordCount案例" class="headerlink" title="WordCount案例"></a>WordCount案例</h2><p>先在HDFS的根目录下新建一个<code>input</code>文件夹用来存储数据：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ hdfs dfs -mkdir /input</span><br></pre></td></tr></table></figure>
+
+<p>然后在本地机器上准备一份数据，使用<code>-put</code>命令上传到HDFS中，并使用<code>-cat</code>参数来查看文件内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ vi 1.log</span><br><span class="line">[clay@Clay hadoop]$ hdfs dfs -ls /input</span><br><span class="line">Found 1 items</span><br><span class="line">-rw-r--r--   1 clay supergroup         45 2021-11-29 22:33 /input/1.log</span><br><span class="line">[clay@Clay hadoop]$ hdfs dfs -cat /input/1.log</span><br><span class="line">clay</span><br><span class="line">clay</span><br><span class="line">hello word</span><br><span class="line">a s d f</span><br><span class="line">s a f d</span><br><span class="line">d f a s</span><br></pre></td></tr></table></figure>
+
+<p>至此，数据准备阶段完成。接下来开始作业：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ find ./ -name &#x27;*example*&#x27;</span><br><span class="line">./libexec/hadoop-layout.sh.example</span><br><span class="line">./etc/hadoop/ssl-server.xml.example</span><br><span class="line">./etc/hadoop/shellprofile.d/example.sh</span><br><span class="line">./etc/hadoop/ssl-client.xml.example</span><br><span class="line">./etc/hadoop/hadoop-user-functions.sh.example</span><br><span class="line">./share/doc/hadoop/api/org/apache/hadoop/examples</span><br><span class="line">./share/doc/hadoop/api/org/apache/hadoop/security/authentication/examples</span><br><span class="line">./share/doc/hadoop/hadoop-mapreduce-examples</span><br><span class="line">./share/doc/hadoop/hadoop-auth-examples</span><br><span class="line">./share/doc/hadoop/hadoop-yarn/hadoop-yarn-common/apidocs/org/apache/hadoop/yarn/webapp/example</span><br><span class="line">./share/hadoop/mapreduce/lib-examples</span><br><span class="line">./share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.2.jar # 运行WC的jar包</span><br><span class="line">./share/hadoop/mapreduce/sources/hadoop-mapreduce-examples-3.2.2-test-sources.jar</span><br><span class="line">./share/hadoop/mapreduce/sources/hadoop-mapreduce-examples-3.2.2-sources.jar</span><br><span class="line">./share/hadoop/yarn/yarn-service-examples</span><br><span class="line">./lib/native/examples</span><br><span class="line">[clay@Clay hadoop]$ yarn jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.2.jar wordcount /input /output # 也可以使用hadoop命令来运行</span><br><span class="line">[clay@Clay hadoop]$ hdfs dfs -get /output</span><br><span class="line">[clay@Clay hadoop]$ cat output/*</span><br><span class="line">a       3</span><br><span class="line">clay    2</span><br><span class="line">d       3</span><br><span class="line">f       3</span><br><span class="line">hello   1</span><br><span class="line">s       3</span><br><span class="line">word    1</span><br></pre></td></tr></table></figure>
+
+<p>WordCount案例完成，词频统计结果正确。</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Hadoop安装与伪分布式部署</li>
+        <li>本文作者：Clay</li>
+        <li>创建时间：2021-11-27 19:10:30</li>
+        <li>
+            本文链接：https://claymn.github.io/2021/11/27/hadoopdeploy/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/11/17/Linux%20command/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Linux常用命令</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            .valine-container {
+
+  #vcomments {
+
+    .vwrap {
+
+      border: 1px solid var(--third-text-color);
+
+      .vheader {
+
+        .vinput {
+
+          color: var(--default-text-color);
+          border-color: var(--third-text-color);
+
+          &:focus {
+            border-bottom: 1px dashed var(--primary-color) !important;
+          }
+        }
+      }
+
+
+      .vedit {
+
+        .veditor {
+          color: var(--default-text-color);
+        }
+
+        .vctrl {
+
+          .vicon {
+
+            fill: var(--default-text-color);
+
+            &.actived {
+              fill: var(--primary-color);
+            }
+          }
+        }
+
+      }
+
+
+      button.vsubmit {
+
+        background: transparent !important;
+        color: var(--default-text-color) !important;
+        border: 1px solid var(--default-text-color) !important;
+
+        &:hover {
+          color: var(--primary-color) !important;
+          border: 1px solid var(--primary-color) !important;
+        }
+      }
+
+
+    }
+
+
+    .vcount {
+      color: var(--default-text-color);
+
+      .vnum {
+        color: var(--second-text-color);
+      }
+    }
+
+
+    .vcard {
+
+      .vnick {
+        .author {
+          font-weight: 450;
+          font-size: 12px;
+          padding: 2px;
+          background: -webkit-linear-gradient(45deg, #e3565e, #ee854b, #f6c258, #90c68a, #5fb3b3, #6699cc, #c594c5);
+          background: linear-gradient(45deg, #e3565e, #ee854b, #f6c258, #90c68a, #5fb3b3, #6699cc, #c594c5);
+          color: #fff;
+          margin-left: 2px;
+          border-radius: 2px;
+        }
+      }
+
+
+      .vhead {
+
+        .vnick {
+          color: var(--primary-color);
+        }
+
+        .vsys {
+          color: var(--default-text-color);
+          background: var(--fourth-text-color) !important;
+        }
+      }
+
+
+      .vcontent {
+        P {
+          color: var(--default-text-color);
+
+          code {
+            color: var(--code-foreground);
+            background: var(--code-background);
+          }
+        }
+      }
+
+
+      .vh {
+        border-bottom-color: var(--border-color);
+      }
+
+      .vquote {
+        border-left-color: var(--border-color);
+      }
+    }
+
+
+    .vcopy {
+      color: var(--third-text-color);
+    }
+
+
+    .vpage {
+
+      .vmore {
+        border: 1px solid var(--border-color);
+        color: var(--second-text-color);
+      }
+    }
+
+
+  }
+
+
+}
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2021</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Clay</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EHadoop"><span class="nav-number">1.</span> <span class="nav-text">关于Hadoop</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hadoop%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">Hadoop安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Minimum-required-Java-version-increased-from-Java-7-to-Java-8"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">Minimum required Java version increased from Java 7 to Java 8</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BB%BA%E7%AB%8B%E7%94%A8%E6%88%B7%E5%8F%8A%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">2.1.</span> <span class="nav-text">1. 建立用户及文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Hadoop%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">2.Hadoop解压安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Standalone%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">3.Standalone模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Pseudo-Distributed%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.4.</span> <span class="nav-text">4.Pseudo-Distributed模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%A6%96%E5%85%88%E8%A6%81%E4%BF%AE%E6%94%B9%E7%9A%84%E6%98%AFcore-site-xml%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.4.1.</span> <span class="nav-text">1. 首先要修改的是core-site.xml文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8E%A5%E4%B8%8B%E6%9D%A5%E4%BF%AE%E6%94%B9hdfs-site-xml%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.4.2.</span> <span class="nav-text">2. 接下来修改hdfs-site.xml文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%A0%E4%B8%BA%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E6%A8%A1%E5%BC%8F%E6%98%AF%E9%9C%80%E8%A6%81%E8%BF%90%E8%A1%8C%E8%BF%9B%E7%A8%8B%EF%BC%8C%E6%89%80%E4%BB%A5%E9%9C%80%E8%A6%81%E9%85%8D%E7%BD%AESSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E3%80%82"><span class="nav-number">2.4.3.</span> <span class="nav-text">3. 因为伪分布式模式是需要运行进程，所以需要配置SSH免密登录。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E5%AE%8C%E6%88%90%EF%BC%8C%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%A0%BC%E5%BC%8F%E5%8C%96%EF%BC%9A"><span class="nav-number">2.4.4.</span> <span class="nav-text">4. 前期准备工作完成，接下来格式化：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%90%AF%E5%8A%A8NameNode%E5%92%8CDataNode%EF%BC%9A"><span class="nav-number">2.4.5.</span> <span class="nav-text">5. 启动NameNode和DataNode：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8jps%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E6%98%AF%E5%90%A6%E5%90%AF%E5%8A%A8%EF%BC%8C%E4%BD%86%E6%98%AF%E6%9C%80%E4%BF%9D%E9%99%A9%E7%9A%84%E6%98%AF%E4%BD%BF%E7%94%A8ps-ef-grep-hadoop%E6%9D%A5%E6%9F%A5%E7%9C%8B%EF%BC%9A"><span class="nav-number">2.4.6.</span> <span class="nav-text">6. 可以使用jps命令查看服务是否启动，但是最保险的是使用ps -ef | grep hadoop来查看：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-HDFS%E7%9A%84web%E7%95%8C%E9%9D%A2%E8%AE%BF%E9%97%AE"><span class="nav-number">2.4.7.</span> <span class="nav-text">7.HDFS的web界面访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E8%BF%90%E8%A1%8C%E5%AE%98%E6%96%B9%E6%B5%8B%E8%AF%95%E6%A1%88%E4%BE%8B"><span class="nav-number">2.4.8.</span> <span class="nav-text">8. 运行官方测试案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E5%AD%98%E5%82%A8%E5%8F%82%E6%95%B0"><span class="nav-number">2.5.</span> <span class="nav-text">修改默认存储参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E6%A8%A1%E5%BC%8F%E4%B8%8Byarn%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="nav-number">2.6.</span> <span class="nav-text">伪分布式模式下yarn的部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WordCount%E6%A1%88%E4%BE%8B"><span class="nav-number">2.7.</span> <span class="nav-text">WordCount案例</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>
