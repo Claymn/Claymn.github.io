@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="大数据">
+    <meta name="author" content="Clay">
+    
+    <title>
+        
+            HDFS常用的shell操作指令 |
+        
+        Clay
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/clogo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/taurus.png","favicon":"/images/clogo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Stay hungry, Stay foolish"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                Clay
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">HDFS常用的shell操作指令</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/taurus.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Clay</span>
+                        
+                            <span class="author-label">Lv1</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-12-01 22:35:54
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Hadoop/">Hadoop</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Hadoop/">Hadoop</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>4.4k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>25 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="Hadoop常用的shell命令"><a href="#Hadoop常用的shell命令" class="headerlink" title="Hadoop常用的shell命令"></a>Hadoop常用的shell命令</h1><p>这篇博客只记录、操作一些常用的命令，关于Hadoop的shell命令可以参考<a class="link"   target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r3.2.2/hadoop-project-dist/hadoop-common/FileSystemShell.html" >官方的Documentation<i class="fas fa-external-link-alt"></i></a> 里更加详细的解释。HDFS系统的shell指令与Linux的指令十分相似，指令所实现的功能也大致相同。</p>
+<h2 id="ls-amp-lsr"><a href="#ls-amp-lsr" class="headerlink" title="ls &amp; lsr"></a>ls &amp; lsr</h2><p>查看HDFS文件系统中的文件、文件夹信息，HDFS中没有<code>ls -l</code>的指令。<code>ls</code>指令所展示的即详细信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay hadoop]$ hdfs dfs -ls /</span><br><span class="line">Found 4 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 22:33 /input</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 23:35 /output</span><br><span class="line">drwx------   - clay supergroup          0 2021-11-29 22:11 /tmp</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 22:10 /user</span><br></pre></td></tr></table></figure>
+
+<p>如上指令，执行之后显示了权限、所属用户、用户组等信息。</p>
+<p><code>lsr</code>指令是以递归的方式显示信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -lsr /user</span><br><span class="line">lsr: DEPRECATED: Please use &#x27;ls -R&#x27; instead.</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /user/clay</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 22:11 /user/clay/input</span><br><span class="line">-rw-r--r--   1 clay supergroup       9213 2021-11-29 22:11 /user/clay/input/capacity-scheduler.xml</span><br><span class="line">-rw-r--r--   1 clay supergroup        349 2021-11-29 22:11 /user/clay/input/core-site.xml</span><br><span class="line">-rw-r--r--   1 clay supergroup      11392 2021-11-29 22:11 /user/clay/input/hadoop-policy.xml</span><br><span class="line">-rw-r--r--   1 clay supergroup        459 2021-11-29 22:11 /user/clay/input/hdfs-site.xml</span><br><span class="line">-rw-r--r--   1 clay supergroup        620 2021-11-29 22:11 /user/clay/input/httpfs-site.xml</span><br><span class="line">-rw-r--r--   1 clay supergroup       3518 2021-11-29 22:11 /user/clay/input/kms-acls.xml</span><br><span class="line">-rw-r--r--   1 clay supergroup        682 2021-11-29 22:11 /user/clay/input/kms-site.xml</span><br><span class="line">-rw-r--r--   1 clay supergroup        483 2021-11-29 22:11 /user/clay/input/mapred-site.xml</span><br><span class="line">-rw-r--r--   1 clay supergroup        586 2021-11-29 22:11 /user/clay/input/yarn-site.xml</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /user/clay/test</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /user/clay/test/1</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /user/clay/test/1/2</span><br></pre></td></tr></table></figure>
+
+<p>可以看到显示结果中提示<code>lsr</code>命令已弃用，由<code>ls -R</code>代替。</p>
+<p><code>-ls</code>后还可以添加其他参数，参数列表及参数实现的功能如下：</p>
+<blockquote>
+<p>-C: Display the paths of files and directories only.</p>
+<p>-d: Directories are listed as plain files.</p>
+<p>-h: Format file sizes in a human-readable fashion (eg 64.0m instead of 67108864).</p>
+<p>-q: Print ? instead of non-printable characters.</p>
+<p>-R: Recursively list subdirectories encountered.</p>
+<p>-t: Sort output by modification time (most recent first).</p>
+<p>-S: Sort output by file size.</p>
+<p>-r: Reverse the sort order.</p>
+<p>-u: Use access time rather than modification time for display and sorting.</p>
+<p>-e: Display the erasure coding policy of files and directories only.</p>
+</blockquote>
+<h2 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h2><p>与Linux相同，是用来查看文件的内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -ls /input</span><br><span class="line">Found 1 items</span><br><span class="line">-rw-r--r--   1 clay supergroup         45 2021-11-29 22:33 /input/1.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -cat /input/1.log</span><br><span class="line">clay</span><br><span class="line">clay</span><br><span class="line">hello word</span><br><span class="line">a s d f</span><br><span class="line">s a f d</span><br><span class="line">d f a s</span><br></pre></td></tr></table></figure>
+
+<h2 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h2><p>创建一个目录。同样可以使用<code>-p</code>参数来级联创建目录。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -mkdir -p /test/1/2</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls -R /test</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1/2</span><br></pre></td></tr></table></figure>
+
+<p>同样可以并联创建目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -mkdir /test1 /test2</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /</span><br><span class="line">Found 7 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 22:33 /input</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 23:35 /output</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:12 /test1</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:12 /test2</span><br><span class="line">drwx------   - clay supergroup          0 2021-11-29 22:11 /tmp</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 22:10 /user</span><br></pre></td></tr></table></figure>
+
+<h2 id="touch-amp-touchz"><a href="#touch-amp-touchz" class="headerlink" title="touch &amp; touchz"></a>touch &amp; touchz</h2><p><code>touch</code>和<code>touchz</code>命令相似，但是<code>touch</code>命令有更多的可选参数而<code>touchz</code>没有可选参数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -touch /test/test.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 2 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-11-30 22:20 /test/test.log</span><br></pre></td></tr></table></figure>
+
+<p><code>touch</code>创建的是一个长度为0的空文件。</p>
+<p><code>touchz</code>的功能是创建一个空文件，如果存在一个同名的非空文件会返回error。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -ls /input</span><br><span class="line">Found 1 items</span><br><span class="line">-rw-r--r--   1 clay supergroup         45 2021-11-29 22:33 /input/1.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -cat /input/1.log</span><br><span class="line">clay</span><br><span class="line">clay</span><br><span class="line">hello word</span><br><span class="line">a s d f</span><br><span class="line">s a f d</span><br><span class="line">d f a s</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -touchz /input/1.log</span><br><span class="line">touchz: `/input/1.log&#x27;: Not a zero-length file</span><br></pre></td></tr></table></figure>
+
+<h2 id="mv"><a href="#mv" class="headerlink" title="mv"></a>mv</h2><p><code>-mv</code>命令实现的功能与Linux一致，可以移动移动文件到另一个目录中。但是不能在不同文件系统之间移动。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 移动单个文件到指定目录</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 2 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-11-30 22:20 /test/test.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -mv /test1/file.log /test</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 3 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-11-30 22:20 /test/test.log</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 移动多个文件到指定的目录</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 3 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-11-30 22:20 /test/test.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test1</span><br><span class="line">Found 2 items</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:35 /test1/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test1/file2.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -mv /test1/file1.log /test1/file2.log /test</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 5 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-11-30 22:20 /test/test.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="put-amp-moveFromLocal-amp-copyFromLocal"><a href="#put-amp-moveFromLocal-amp-copyFromLocal" class="headerlink" title="put &amp; moveFromLocal &amp; copyFromLocal"></a>put &amp; moveFromLocal &amp; copyFromLocal</h2><p>三个命令的功能都是将文件从本地上传到文件系统中。<code>put</code>命令有更多的可选参数：</p>
+<blockquote>
+<ul>
+<li><code>-p</code> : Preserves access and modification times, ownership and the permissions. (assuming the permissions can be propagated across filesystems)</li>
+<li><code>-f</code> : Overwrites the destination if it already exists.</li>
+<li><code>-t &lt;thread count&gt;</code> : Number of threads to be used, default is 1. Useful when uploading a directory containing more than 1 file.</li>
+<li><code>-l</code> : Allow DataNode to lazily persist the file to disk, Forces a replication factor of 1. This flag will result in reduced durability. Use with care.</li>
+<li><code>-d</code> : Skip creation of temporary file with the suffix <code>._COPYING_</code>.</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ ll</span><br><span class="line">total 28</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 22 21:20 app</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 data</span><br><span class="line">-rw-rw-r-- 1 clay clay    0 Dec  1 20:58 file3.log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 lib</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:11 software</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 sourcecode</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 30 20:44 tmp</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -put file3.log /test</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 6 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-11-30 22:20 /test/test.log</span><br></pre></td></tr></table></figure>
+
+<p>而<code>moveFromLocal</code>没有可选的参数，并且会在上传完成后删除源文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ ll</span><br><span class="line">total 28</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 22 21:20 app</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 data</span><br><span class="line">-rw-rw-r-- 1 clay clay    0 Dec  1 20:58 file3.log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 lib</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:11 software</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 sourcecode</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 30 20:44 tmp</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -put file3.log /test</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 6 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-11-30 22:20 /test/test.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -moveFromLocal file3.log /test1</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test1</span><br><span class="line">Found 1 items</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:05 /test1/file3.log</span><br><span class="line">[clay@Clay ~]$ ll # 本地目录的file3.log已经被删除了</span><br><span class="line">total 28</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 22 21:20 app</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 data</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 lib</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:11 software</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 sourcecode</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 30 20:44 tmp</span><br></pre></td></tr></table></figure>
+
+<p><code>copyFromLocal</code>与<code>put</code>相同，两者没有区别，也不会删除源文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -copyFromLocal test.log /test</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 6 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:49 /test/test.log</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="get-amp-moveToLocal-amp-copyToLocal"><a href="#get-amp-moveToLocal-amp-copyToLocal" class="headerlink" title="get &amp; moveToLocal &amp; copyToLocal"></a>get &amp; moveToLocal &amp; copyToLocal</h2><p>三个命令功能相同，都是从文件系统拷贝到本地文件系统。但是<code>get</code>有更多的可选参数：</p>
+<blockquote>
+<ul>
+<li><code>-p</code> : Preserves access and modification times, ownership and the permissions. (assuming the permissions can be propagated across filesystems)</li>
+<li><code>-f</code> : Overwrites the destination if it already exists.</li>
+<li><code>-ignorecrc</code> : Skip CRC checks on the file(s) downloaded.</li>
+<li><code>-crc</code>: write CRC checksums for the files downloaded.</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 6 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-11-30 22:20 /test/test.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -get /test/test.log /home/clay</span><br><span class="line">[clay@Clay ~]$ ll</span><br><span class="line">total 28</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 22 21:20 app</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 data</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 lib</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:11 software</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 sourcecode</span><br><span class="line">-rw-r--r-- 1 clay clay    0 Dec  1 21:16 test.log</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 30 20:44 tmp</span><br></pre></td></tr></table></figure>
+
+<p><code>mvToLocal</code>实现相同功能，但是现在官方并没有实现这个功能。<code>copyToLocal</code>与<code>get</code>相同，不会对源文件产生影响。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ ll</span><br><span class="line">total 28</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 22 21:20 app</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 data</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 lib</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:11 software</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 sourcecode</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 30 20:44 tmp</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -copyToLocal /test/test.log /home/clay</span><br><span class="line">[clay@Clay ~]$ ll</span><br><span class="line">total 28</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 22 21:20 app</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 data</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 lib</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 log</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:11 software</span><br><span class="line">drwxrwxr-x 2 clay clay 4096 Nov 22 21:05 sourcecode</span><br><span class="line">-rw-r--r-- 1 clay clay    0 Dec  1 21:52 test.log</span><br><span class="line">drwxrwxr-x 3 clay clay 4096 Nov 30 20:44 tmp</span><br></pre></td></tr></table></figure>
+
+<h2 id="cp"><a href="#cp" class="headerlink" title="cp"></a>cp</h2><p>拷贝命令，可以有多个源文件，但是目标必须是一个目录才可以。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test1</span><br><span class="line">Found 1 items</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:05 /test1/file3.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -cp /test/file2.log /test1</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test1</span><br><span class="line">Found 2 items</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:55 /test1/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:05 /test1/file3.log</span><br></pre></td></tr></table></figure>
+
+<p>可以同时拷贝多个文件到指定目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -cp /test/file.log /test/file1.log /test1</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test1</span><br><span class="line">Found 4 items</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:57 /test1/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:57 /test1/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:55 /test1/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:05 /test1/file3.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="df"><a href="#df" class="headerlink" title="df"></a>df</h2><p>显示文件系统的空余空间。可选参数为<code>-h</code>，参数的作用就是将空间转化为人类易读的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 不添加-h参数</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -df /</span><br><span class="line">Filesystem               Size     Used    Available  Use%</span><br><span class="line">hdfs://Clay:9000  42135011328  4235264  33626238976    0%</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用-h参数</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -df -h /</span><br><span class="line">Filesystem          Size   Used  Available  Use%</span><br><span class="line">hdfs://Clay:9000  39.2 G  4.0 M     31.3 G    0%</span><br></pre></td></tr></table></figure>
+
+<h2 id="du"><a href="#du" class="headerlink" title="du"></a>du</h2><p>显示文件、文件夹的大小。可选参数为：</p>
+<blockquote>
+<ul>
+<li>The -s option will result in an aggregate summary of file lengths being displayed, rather than the individual files. Without the -s option, calculation is done by going 1-level deep from the given path.</li>
+<li>The -h option will format file sizes in a “human-readable” fashion (e.g 64.0m instead of 67108864)</li>
+<li>The -v option will display the names of columns as a header line.</li>
+<li>The -x option will exclude snapshots from the result calculation. Without the -x option (default), the result is always calculated from all INodes, including all snapshots under the given path.</li>
+</ul>
+</blockquote>
+<p>命令返回的三项数据为：</p>
+<blockquote>
+<p>size disk_space_consumed_with_all_replicas full_path_name</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看目录的大小</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -du -h /</span><br><span class="line">45      45      /input</span><br><span class="line">38      38      /output</span><br><span class="line">0       0       /test</span><br><span class="line">0       0       /test1</span><br><span class="line">0       0       /test2</span><br><span class="line">3.7 M   22.7 M  /tmp</span><br><span class="line">26.7 K  26.7 K  /user</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看文件的大小可以使用-s参数</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -du -s -h /input/1.log</span><br><span class="line">45  45  /input/1.log</span><br><span class="line"></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -du -s -h /user/clay/input/*</span><br><span class="line">9.0 K   9.0 K   /user/clay/input/capacity-scheduler.xml</span><br><span class="line">349     349     /user/clay/input/core-site.xml</span><br><span class="line">11.1 K  11.1 K  /user/clay/input/hadoop-policy.xml</span><br><span class="line">459     459     /user/clay/input/hdfs-site.xml</span><br><span class="line">620     620     /user/clay/input/httpfs-site.xml</span><br><span class="line">3.4 K   3.4 K   /user/clay/input/kms-acls.xml</span><br><span class="line">682     682     /user/clay/input/kms-site.xml</span><br><span class="line">483     483     /user/clay/input/mapred-site.xml</span><br><span class="line">586     586     /user/clay/input/yarn-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>官方文档中还提到了<code>dus</code>命令。但是<code>dus</code>已经被标识<code>deprecated</code>，由<code>du -s</code>代替。</p>
+<h2 id="tail"><a href="#tail" class="headerlink" title="tail"></a>tail</h2><p>显示文件的最后千字节的内容，<code>-f</code>参数可以实现查看新增数据。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -tail /input/1.log</span><br><span class="line">clay</span><br><span class="line">clay</span><br><span class="line">hello word</span><br><span class="line">a s d f</span><br><span class="line">s a f d</span><br><span class="line">d f a s</span><br></pre></td></tr></table></figure>
+
+<h2 id="chmod-amp-chown"><a href="#chmod-amp-chown" class="headerlink" title="chmod &amp; chown"></a>chmod &amp; chown</h2><p>可以修改权限和文件所属。<code>-R</code>参数可以实现以递归的方式修改目录下的文件的权限。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 6 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:49 /test/test.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -chmod 666 /test/file.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 6 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">-rw-r--r--   1 clay supergroup          0 2021-12-01 21:49 /test/test.log</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用-R参数修改所有<span class="built_in">log</span>文件的权限</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -chmod -R 666 /test</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test</span><br><span class="line">Found 6 items</span><br><span class="line">drw-rw-rw-   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 21:49 /test/test.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="rm-amp-rmdir"><a href="#rm-amp-rmdir" class="headerlink" title="rm &amp; rmdir"></a>rm &amp; rmdir</h2><p>删除功能，有可选参数：</p>
+<blockquote>
+<ul>
+<li>The -f option will not display a diagnostic message or modify the exit status to reflect an error if the file does not exist.</li>
+<li>The -R option deletes the directory and any content under it recursively.</li>
+<li>The -r option is equivalent to -R.</li>
+<li>The -skipTrash option will bypass trash, if enabled, and delete the specified file(s) immediately. This can be useful when it is necessary to delete files from an over-quota directory.</li>
+<li>The -safely option will require safety confirmation before deleting directory with total number of files greater than <code>hadoop.shell.delete.limit.num.files</code> (in core-site.xml, default: 100). It can be used with -skipTrash to prevent accidental deletion of large directories. Delay is expected when walking over large directory recursively to count the number of files to be deleted before the confirmation.</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除特定文件</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls -R /test</span><br><span class="line">drw-rw-rw-   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">drw-rw-rw-   - clay supergroup          0 2021-11-30 22:06 /test/1/2</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 21:49 /test/test.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -rm /test/test.log</span><br><span class="line">Deleted /test/test.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls -R /test</span><br><span class="line">drw-rw-rw-   - clay supergroup          0 2021-11-30 22:06 /test/1</span><br><span class="line">drw-rw-rw-   - clay supergroup          0 2021-11-30 22:06 /test/1/2</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 使用-R参数</span></span><br><span class="line">[clay@Clay ~]$ hdfs dfs -rm -R /test/1</span><br><span class="line">Deleted /test/1</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls -R /test</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br></pre></td></tr></table></figure>
+
+<p><code>rmdir</code>命令可以用来删除空目录，还有一个可选参数：</p>
+<blockquote>
+<p><code>--ignore-fail-on-non-empty</code>: When using wildcards, do not fail if a directory still contains files.</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -ls /test2</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -rmdir /test2</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls /</span><br><span class="line">Found 7 items</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-12-01 23:28 /a</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 22:33 /input</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 23:35 /output</span><br><span class="line">drw-rw-rw-   - clay supergroup          0 2021-12-01 23:24 /test</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-12-01 21:57 /test1</span><br><span class="line">drwx------   - clay supergroup          0 2021-11-29 22:11 /tmp</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-11-29 22:10 /user</span><br></pre></td></tr></table></figure>
+
+<p><code>test2</code>是一个空目录，使用<code>rmdir</code>可以直接删除。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[clay@Clay ~]$ hdfs dfs -ls -R /test</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-12-01 23:24 /test/a</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-12-01 23:24 /test/a/b</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-12-01 23:24 /test/a/b/c</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -rmdir --ignore-fail-on-non-empty /test/a</span><br><span class="line">[clay@Clay ~]$ hdfs dfs -ls -R /test</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-12-01 23:24 /test/a</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-12-01 23:24 /test/a/b</span><br><span class="line">drwxr-xr-x   - clay supergroup          0 2021-12-01 23:24 /test/a/b/c</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:35 /test/file1.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:31 /test/file2.log</span><br><span class="line">-rw-rw-rw-   1 clay supergroup          0 2021-12-01 20:59 /test/file3.log</span><br></pre></td></tr></table></figure>
+
+<p>当目录不为空时，添加参数<code>--ignore-fail-on-non-empty</code>后既不报错也不删除目录。</p>
+<p><strong>以上为常用的shell命令，<a class="link"   target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r3.2.2/hadoop-project-dist/hadoop-common/FileSystemShell.html" >官方文档<i class="fas fa-external-link-alt"></i></a> 中有更加详细的命令集合、命令的详细功能及命令的可选参数解释。</strong></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：HDFS常用的shell操作指令</li>
+        <li>本文作者：Clay</li>
+        <li>创建时间：2021-12-01 22:35:54</li>
+        <li>
+            本文链接：https://claymn.github.io/2021/12/01/hadoop-shell/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/11/27/hadoopdeploy/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Hadoop安装与伪分布式部署</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script 
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script >
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'DwhETuCicGIBRdKi5BXTll0o-gzGzoHsz',
+                    appKey: 'R6lYu4fxN1Dad5S2nGWcbbvs',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '😄有什么想说的？留言给我吧...',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = 'Clay';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('false') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2021</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Clay</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hadoop%E5%B8%B8%E7%94%A8%E7%9A%84shell%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">Hadoop常用的shell命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ls-amp-lsr"><span class="nav-number">1.1.</span> <span class="nav-text">ls &amp; lsr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cat"><span class="nav-number">1.2.</span> <span class="nav-text">cat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mkdir"><span class="nav-number">1.3.</span> <span class="nav-text">mkdir</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#touch-amp-touchz"><span class="nav-number">1.4.</span> <span class="nav-text">touch &amp; touchz</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mv"><span class="nav-number">1.5.</span> <span class="nav-text">mv</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#put-amp-moveFromLocal-amp-copyFromLocal"><span class="nav-number">1.6.</span> <span class="nav-text">put &amp; moveFromLocal &amp; copyFromLocal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#get-amp-moveToLocal-amp-copyToLocal"><span class="nav-number">1.7.</span> <span class="nav-text">get &amp; moveToLocal &amp; copyToLocal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cp"><span class="nav-number">1.8.</span> <span class="nav-text">cp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#df"><span class="nav-number">1.9.</span> <span class="nav-text">df</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#du"><span class="nav-number">1.10.</span> <span class="nav-text">du</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tail"><span class="nav-number">1.11.</span> <span class="nav-text">tail</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chmod-amp-chown"><span class="nav-number">1.12.</span> <span class="nav-text">chmod &amp; chown</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rm-amp-rmdir"><span class="nav-number">1.13.</span> <span class="nav-text">rm &amp; rmdir</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>
