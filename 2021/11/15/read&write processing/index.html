@@ -183,12 +183,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>1.7k 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>2k 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>6 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>7 分钟</span>
         </span>
     
     
@@ -245,15 +245,14 @@
 <h1 id="HDFS读流程"><a href="#HDFS读流程" class="headerlink" title="HDFS读流程"></a>HDFS读流程</h1><p><img src="/img/HDFS-read.001.png" alt="HDFS-read.001"></p>
 <p>读取文件的流程也是用户无感知的。具体流程如下：</p>
 <ol>
-<li><p>首先<code>hdfs client</code>会调用<code>FileSystem</code>的<code>open</code>方法和NN进行RCP通信。（上图中的1、2步骤）</p>
-</li>
-<li><p>然后NameNode将文件的全部或者部分block列表返回给<code>FSDataInputStream</code>。（上图中的3）</p>
-</li>
-<li><p><code>client</code>调用<code>FSDataInputstrem</code>的read方法去最近的一个存放有第一个块的DataNode进行读取。成功读取后进行校验，校验通过就关闭与DataNode的通信；假如校验失败，这记录块和DataNode的信息，下次就不从这个节点读取，而是从其他节点读取。然后读取最近的第二个块，以此类推。假如block列表全部读取完成之后文件还没有结束，就会向NameNode请求下一个批次的block列表。</p>
-</li>
-<li><p>当文件读取完毕，<code>client</code> 调用<code>FSDataInputStream</code>对象的<code>close</code>方法关闭输入流。整个读取文件的流程结束。</p>
-</li>
+<li>首先<code>hdfs client</code>会调用<code>FileSystem</code>的<code>open</code>方法和NN进行RCP通信。（上图中的1、2步骤）</li>
+<li>然后NameNode将文件的全部或者部分block列表返回给<code>FSDataInputStream</code>。（上图中的3）</li>
+<li><code>client</code>调用<code>FSDataInputstrem</code>的read方法去最近的一个存放有第一个块的DataNode进行读取。成功读取后进行校验，校验通过就关闭与DataNode的通信；假如校验失败，这记录块和DataNode的信息，下次就不从这个节点读取，而是从其他节点读取。然后读取最近的第二个块，以此类推。假如block列表全部读取完成之后文件还没有结束，就会向NameNode请求下一个批次的block列表。</li>
+<li>当文件读取完毕，<code>client</code> 调用<code>FSDataInputStream</code>对象的<code>close</code>方法关闭输入流。整个读取文件的流程结束。</li>
 </ol>
+<h1 id="副本放置策略"><a href="#副本放置策略" class="headerlink" title="副本放置策略"></a>副本放置策略</h1><p><img src="/Users/munan/hexo/source/img/Strategy.001.png" alt="Strategy.001"></p>
+<p>理论上读写操作尽量选择在DataNode节点上进行。这样第一个副本就会与<code>clieant</code>在同一个节点上，节省了网络IO的时间。第二个副本放置在不同机架上的某个节点。第三个副本放置在与第二个副本相同机架上的不同机器上。</p>
+<p>但是在实际生产上这样的放置策略会带来权限问题（第一个副本可以读取，第二、第三个副本由于在不同机器上可能会出现<code>Permission Denied</code>）。所以生产上真正的放置策略会有一个单独的<code>client</code>节点，既不是NameNode也不是DataNode节点。但是这样的放置策略与上面提到的就近原则相违背，其实网络IO在现在的环境中是可以忽略不计的，相较于可以忽略不计的IO，数据安全更为重要。</p>
 
         </div>
 
@@ -510,7 +509,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Block"><span class="nav-number">1.</span> <span class="nav-text">Block</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HDFS%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">HDFS架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NameNode"><span class="nav-number">2.1.</span> <span class="nav-text">NameNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DataNode"><span class="nav-number">2.2.</span> <span class="nav-text">DataNode</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HDFS%E5%86%99%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">HDFS写流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">HDFS读流程</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Block"><span class="nav-number">1.</span> <span class="nav-text">Block</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HDFS%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">HDFS架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NameNode"><span class="nav-number">2.1.</span> <span class="nav-text">NameNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DataNode"><span class="nav-number">2.2.</span> <span class="nav-text">DataNode</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HDFS%E5%86%99%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">HDFS写流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">HDFS读流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5"><span class="nav-number">5.</span> <span class="nav-text">副本放置策略</span></a></li></ol>
     </div>
 </div>
         </aside>
