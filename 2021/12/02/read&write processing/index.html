@@ -250,7 +250,7 @@
 <li><code>client</code>调用<code>FSDataInputstrem</code>的read方法去最近的一个存放有第一个块的DataNode进行读取。成功读取后进行校验，校验通过就关闭与DataNode的通信；假如校验失败，这记录块和DataNode的信息，下次就不从这个节点读取，而是从其他节点读取。然后读取最近的第二个块，以此类推。假如block列表全部读取完成之后文件还没有结束，就会向NameNode请求下一个批次的block列表。</li>
 <li>当文件读取完毕，<code>client</code> 调用<code>FSDataInputStream</code>对象的<code>close</code>方法关闭输入流。整个读取文件的流程结束。</li>
 </ol>
-<h1 id="副本放置策略"><a href="#副本放置策略" class="headerlink" title="副本放置策略"></a>副本放置策略</h1><p><img src="/Users/munan/hexo/source/img/Strategy.001.png" alt="Strategy.001"></p>
+<h1 id="副本放置策略"><a href="#副本放置策略" class="headerlink" title="副本放置策略"></a>副本放置策略</h1><p><img src="/img/Strategy.001.png" alt="Strategy.001"></p>
 <p>理论上读写操作尽量选择在DataNode节点上进行。这样第一个副本就会与<code>clieant</code>在同一个节点上，节省了网络IO的时间。第二个副本放置在不同机架上的某个节点。第三个副本放置在与第二个副本相同机架上的不同机器上。</p>
 <p>但是在实际生产上这样的放置策略会带来权限问题（第一个副本可以读取，第二、第三个副本由于在不同机器上可能会出现<code>Permission Denied</code>）。所以生产上真正的放置策略会有一个单独的<code>client</code>节点，既不是NameNode也不是DataNode节点。但是这样的放置策略与上面提到的就近原则相违背，其实网络IO在现在的环境中是可以忽略不计的，相较于可以忽略不计的IO，数据安全更为重要。</p>
 
